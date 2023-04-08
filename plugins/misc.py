@@ -1,4 +1,5 @@
 import os
+import instaloader
 from pyrogram import Client, filters
 from pyrogram.errors.exceptions.bad_request_400 import UserNotParticipant, MediaEmpty, PhotoInvalidDimensions, WebpageMediaEmpty
 from info import IMDB_TEMPLATE
@@ -7,6 +8,7 @@ import time
 from datetime import datetime
 from pyrogram.types import InlineKeyboardMarkup, InlineKeyboardButton, CallbackQuery
 import logging
+from info import INSTA_USERNAME, INSTA_PASS
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.ERROR)
 
@@ -126,6 +128,40 @@ async def who_is(client, message):
             disable_notification=True
         )
     await status_message.delete()
+
+
+
+
+@Client.on_message(filters.command(["insta"]))
+async def insta_downloader(client, message):
+    if ' ' in message.text:
+        k = await message.reply('Downloading File')
+        r, link = message.text.split(None, 1)
+        # Create an instance of Instaloader class
+        insta = instaloader.Instaloader()
+        username =INSTA_USERNAME
+        password = INSTA_PASS
+        
+        # Login to your Instagram account (if you have one)
+        insta.context.login(username, password)
+        
+        # Obtain the post URL (for example)
+        post_url = link
+        
+        # Obtain the post ID from the URL
+        post_id = instaloader.Post.from_shortcode(insta.context, post_url.split("/")[-2]).shortcode
+        
+        # Download the post and save it to a file
+        post = insta.download_post(post_id)
+        
+        await message.reply(post)
+
+        if not post:
+            return await message.reply("No Post Found")
+    else:
+        await message.reply('Give me a Insta Post Link')
+
+
 
 @Client.on_message(filters.command(["imdb", 'search']))
 async def imdb_search(client, message):
