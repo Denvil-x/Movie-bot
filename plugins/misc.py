@@ -255,6 +255,8 @@ async def imdb_callback(bot: Client, quer_y: CallbackQuery):
 
 
 
-# O stri , Marne ke baad aana     
+# O stri , Marne ke baad kholna isse
+
+# Telegram Qr :- https://graph.org/file/0e200a63ff0621d6eb677.jpg 
 
         
